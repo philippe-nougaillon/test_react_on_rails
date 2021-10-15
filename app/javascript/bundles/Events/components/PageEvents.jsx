@@ -6,7 +6,7 @@ import Events from "./Events"
 const PageEvents = (props) => {
 
   const [searchTerm, setSearchTerm] = React.useState(
-    localStorage.getItem('search') || 'React'      
+    localStorage.getItem('search') || 'event'      
   );
 
   const handleChange = (event) => {
