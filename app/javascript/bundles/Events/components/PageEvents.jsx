@@ -9,10 +9,13 @@ const PageEvents = (props) => {
     localStorage.getItem('search') || ''      
   );
 
+  React.useEffect(() => {
+    localStorage.setItem('search', searchTerm);
+  }, [searchTerm]);
+
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
-    localStorage.setItem('search', event.target.value);
-    console.log(event.target.value);
+    console.log(searchTerm);
   };
 
   const searchedEvents = props.items.filter((item) => 
