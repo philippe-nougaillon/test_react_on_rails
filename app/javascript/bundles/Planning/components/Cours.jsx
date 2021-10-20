@@ -4,9 +4,9 @@ import PropTypes from "prop-types"
 const Cours = ({ item }) => {
   return (
     <React.Fragment>
-      <li>
+      <h1>
         { `${ item.debut_fin_json_v2 } : ${ item.formation_json_v2 } : ${ item.intervenant_json } : ${ item.salle_json_v2 }` } 
-      </li>
+      </h1>
     </React.Fragment>
   );
 }

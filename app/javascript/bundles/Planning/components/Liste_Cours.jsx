@@ -5,12 +5,12 @@ import Cours from "./Cours";
 const ListeCours  = ({ items }) => {
 
   const List = ({ items }) => (
-    <ul>
+    <div>
       { items.map((item) => (
           <Cours key={ item.id } item={ item } />
         ))
       }
-    </ul>
+    </div>
   );
 
   return (
