@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useReducer, useRef, useEffect } from 'react';
 import ListeCours from './Liste_Cours';
 
 const API_ENDPOINT = "https://planning.iae-paris.com/api/v2/cours?d="
 
 const useInterval = (callback, delay) => {
-  const savedCallback = React.useRef();
+  const savedCallback = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const tick = () => {
       savedCallback.current();
     }
@@ -25,8 +25,8 @@ const useInterval = (callback, delay) => {
 const Planning = () => {
 
   const per_page = 8;
-  const [currentPage, setCurrentPage] = React.useState(0); 
-  const [paginatedPlanning, setPaginatedPlanning] = React.useState(new Array());
+  const [currentPage, setCurrentPage] = useState(0); 
+  const [paginatedPlanning, setPaginatedPlanning] = useState(new Array());
 
   const planningReducer = (state, action) => {
     switch (action.type) {
@@ -55,7 +55,7 @@ const Planning = () => {
     }
   };
 
-  const [planning, dispatchPlanning] = React.useReducer(
+  const [planning, dispatchPlanning] = useReducer(
     planningReducer,
     { data: [], isLoading: false, isError: false, totalPages: 0 }
   );
@@ -78,11 +78,11 @@ const Planning = () => {
       );
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchPlanning();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Pagine la liste des cours par tranche de 'per_page'
     const item_position = per_page * currentPage;
     setPaginatedPlanning(planning.data.slice(item_position, item_position + per_page))
