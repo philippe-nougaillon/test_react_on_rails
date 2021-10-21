@@ -104,7 +104,9 @@ const Planning = () => {
       { planning.isLoading 
         ? (<p>Loading...</p>) 
         : (<div>
-            <h2>page: { currentPage + 1}/{ planning.totalPages + 1 }</h2>
+            <h1>Planning</h1>
+            <h2>{ Date() }</h2>
+            <h3>page: { currentPage + 1}/{ planning.totalPages + 1 }</h3>
             <ListeCours items={ paginatedPlanning } />
           </div>) 
       }
