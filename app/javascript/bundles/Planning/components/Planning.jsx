@@ -24,9 +24,9 @@ const useInterval = (callback, delay) => {
 
 const Planning = () => {
 
-  const [currentPage, setCurrentPage] = React.useState(0); 
-
   const per_page = 8;
+  const [currentPage, setCurrentPage] = React.useState(0); 
+  const [paginatedPlanning, setPaginatedPlanning] = React.useState(new Array());
 
   const planningReducer = (state, action) => {
     switch (action.type) {
@@ -42,6 +42,7 @@ const Planning = () => {
           isLoading: false,
           isError: false,
           data: action.payload,
+          totalPages: Math.round(action.payload.length / per_page),
         };
       case 'PLANNING_FETCH_FAILURE':
         return{
@@ -56,7 +57,7 @@ const Planning = () => {
 
   const [planning, dispatchPlanning] = React.useReducer(
     planningReducer,
-    { data: [], isLoading: false, isError: false }
+    { data: [], isLoading: false, isError: false, totalPages: 0 }
   );
 
   const fetchPlanning = () => {
@@ -75,14 +76,21 @@ const Planning = () => {
       .catch(() => 
         dispatchPlanning({ type: 'PLANNING_FETCH_FAILURE' })
       );
-  }
+  };
 
   React.useEffect(() => {
     fetchPlanning();
   }, []);
 
+  React.useEffect(() => {
+    // Pagine la liste des cours par tranche de 'per_page'
+    const item_position = per_page * currentPage;
+    setPaginatedPlanning(planning.data.slice(item_position, item_position + per_page))
+  }, [currentPage]);
+
+  // Changer de page à l'expiration du délai et recharger si première page
   useInterval(() => {
-    if (currentPage < (planning.data.length / per_page)) {
+    if (currentPage < planning.totalPages) {
       setCurrentPage(currentPage + 1);
     } else {
       setCurrentPage(0);
@@ -96,8 +104,8 @@ const Planning = () => {
       { planning.isLoading 
         ? (<p>Loading...</p>) 
         : (<div>
-            <h2>page: { currentPage }</h2>
-            <ListeCours items={ planning.data.slice(per_page * currentPage, (per_page * currentPage) + per_page ) } />
+            <h2>page: { currentPage }/{ planning.totalPages }</h2>
+            <ListeCours items={ paginatedPlanning } />
           </div>) 
       }
     </div>
