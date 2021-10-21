@@ -22,11 +22,11 @@ const useInterval = (callback, delay) => {
   }, [delay]);
 };
 
-const Planning = ({current_date}) => {
+const Planning = () => {
 
   const [currentPage, setCurrentPage] = React.useState(0); 
 
-  const per_page = 10;
+  const per_page = 8;
 
   const planningReducer = (state, action) => {
     switch (action.type) {
@@ -59,10 +59,12 @@ const Planning = ({current_date}) => {
     { data: [], isLoading: false, isError: false }
   );
 
-  React.useEffect(() => {
+  const fetchPlanning = () => {
     dispatchPlanning({ type: 'PLANNING_FETCH_INIT' });
 
-    fetch(`${ API_ENDPOINT }${ current_date }`)
+    const today = new Date().toISOString().slice(0, 10);
+
+    fetch(`${ API_ENDPOINT }${ today }`)
       .then((response) => response.json())
       .then((result) => {
         dispatchPlanning({
@@ -73,6 +75,10 @@ const Planning = ({current_date}) => {
       .catch(() => 
         dispatchPlanning({ type: 'PLANNING_FETCH_FAILURE' })
       );
+  }
+
+  React.useEffect(() => {
+    fetchPlanning();
   }, []);
 
   useInterval(() => {
@@ -80,8 +86,10 @@ const Planning = ({current_date}) => {
       setCurrentPage(currentPage + 1);
     } else {
       setCurrentPage(0);
+      console.log("Fetching Planning...")
+      fetchPlanning();
     }
-  }, 1000);
+  }, 5000);
 
   return (
     <div>
