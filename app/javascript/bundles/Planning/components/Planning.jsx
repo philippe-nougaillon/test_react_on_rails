@@ -42,7 +42,7 @@ const Planning = () => {
           isLoading: false,
           isError: false,
           data: action.payload,
-          totalPages: Math.round(action.payload.length / per_page),
+          totalPages: Math.trunc(action.payload.length / per_page),
         };
       case 'PLANNING_FETCH_FAILURE':
         return{
@@ -78,24 +78,25 @@ const Planning = () => {
       );
   };
 
-  useEffect(() => {
-    fetchPlanning();
-  }, []);
+  // useEffect(() => {
+  // fetchPlanning();
+  // }, []);
 
   useEffect(() => {
     // Pagine la liste des cours par tranche de 'per_page'
     const item_position = per_page * currentPage;
     setPaginatedPlanning(planning.data.slice(item_position, item_position + per_page))
+    console.log(`data.length: ${ planning.data.length } | pages: ${ planning.data.length / per_page } | currentPage: ${ currentPage } | slice start: ${ item_position } | slice end: ${ item_position + per_page }`);
   }, [currentPage]);
 
-  // Changer de page à l'expiration du délai et recharger si première page
   useInterval(() => {
+    // Changer de page à l'expiration du délai et recharger si première page
     if (currentPage < planning.totalPages) {
       setCurrentPage(currentPage + 1);
     } else {
-      setCurrentPage(0);
       console.log("Fetching Planning...")
       fetchPlanning();
+      setCurrentPage(0);
     }
   }, 5000);
 
@@ -104,7 +105,7 @@ const Planning = () => {
       { planning.isLoading 
         ? (<p>Loading...</p>) 
         : (<div>
-            <h2>page: { currentPage }/{ planning.totalPages }</h2>
+            <h2>page: { currentPage + 1}/{ planning.totalPages + 1 }</h2>
             <ListeCours items={ paginatedPlanning } />
           </div>) 
       }
@@ -113,7 +114,7 @@ const Planning = () => {
 };
 
 Planning.propTypes = {
-  current_date: PropTypes.string.isRequired, // this is passed from the Rails view
+  //current_date: PropTypes.string.isRequired, // this is passed from the Rails view
 };
 
 export default Planning;
