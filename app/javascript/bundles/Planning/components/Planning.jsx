@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useState, useReducer, useRef, useEffect } from 'react';
 import ListeCours from './Liste_Cours';
 
@@ -25,7 +24,7 @@ const useInterval = (callback, delay) => {
 const Planning = () => {
 
   const per_page = 8;
-  const [currentPage, setCurrentPage] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(-1); 
   const [paginatedPlanning, setPaginatedPlanning] = useState(new Array());
 
   const planningReducer = (state, action) => {
@@ -78,9 +77,9 @@ const Planning = () => {
       );
   };
 
-  // useEffect(() => {
-  // fetchPlanning();
-  // }, []);
+  useEffect(() => {
+    fetchPlanning();
+  }, []);
 
   useEffect(() => {
     // Pagine la liste des cours par tranche de 'per_page'
@@ -111,10 +110,6 @@ const Planning = () => {
       }
     </div>
   );
-};
-
-Planning.propTypes = {
-  //current_date: PropTypes.string.isRequired, // this is passed from the Rails view
 };
 
 export default Planning;
